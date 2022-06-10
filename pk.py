@@ -23,8 +23,11 @@ def fight(me, other):
         else:
             is_cri = random.randint(0, 99) < (fighter['critical'] - defender['tough'])
             blood = max(0, fighter['attack'] * (2 if is_cri else 1) - defender['defend'])
-            defender['hp'] -= blood
-            msg.append('【%s】发动%s，造成了%d的伤害，【%s】还剩%d的生命' % (fighter['name'], '致命一击' if is_cri else '攻击', blood, defender['name'], defender['hp']))
+            if blood == 0:
+                msg.append('【%s】发动%s，但是未能破防，【%s】还剩%d的生命' % (fighter['name'], '致命一击' if is_cri else '攻击', defender['name'], defender['hp']))
+            else:
+                defender['hp'] -= blood
+                msg.append('【%s】发动%s，造成了%d的伤害，【%s】还剩%d的生命' % (fighter['name'], '致命一击' if is_cri else '攻击', blood, defender['name'], defender['hp']))
         is_me_round = not is_me_round
         if len(msg) >= 1000:
             msg = msg[:9] + ['......', '双方打生打死，不分胜负，握手言和了']

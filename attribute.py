@@ -91,6 +91,7 @@ def attr_funcs(u, message, other):
     elif attrs[1] == '增加':
         sets = {}
         add_val = 0
+        have_val = False
         for k in attrs[2:]:
             tmp = k.split('=')
             one_val = int(tmp[-1])
@@ -99,7 +100,8 @@ def attr_funcs(u, message, other):
                     return '【%s】加点不可以设置为负值' % (u.nick_name)
                 sets[tmp[0]] = one_val
                 add_val += one_val
-        if add_val == 0:
+                have_val = have_val or (one_val != 0)
+        if add_val == 0 and not have_val:
             return '【%s】不加点玩呢？' % (u.nick_name)
 
         if add_val + u.info.get('used_gongli', 0) > u.info.get('gongli', 0):
