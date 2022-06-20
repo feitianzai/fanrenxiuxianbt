@@ -40,8 +40,9 @@ def fight(me, other):
                 if defender['hp'] <= 0:
                     info = defender['player'].on_attack('on_death')
                     if info['trigger']:
-                        msg.append(info['msg'])
                         fighter['hp'] -= info['damage']
+                        info['msg'] += '，【%s】还剩%d的生命' % (fighter['name'], fighter['hp'])
+                        msg.append(info['msg'])
 
         is_me_round = not is_me_round
         if len(msg) >= 1000:
