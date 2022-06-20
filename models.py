@@ -8,6 +8,7 @@ from treasure import get_one_event
 import attribute
 import pk
 import battle
+import skill
 
 db_name = "烦人修仙bt.db"
 db_conn = None
@@ -238,6 +239,13 @@ class user():
     def battle(self, friend, message):
         self.set_nick(friend)
         return battle.funcs(self, message)
+
+    def skill(self, friend, message):
+        self.set_nick(friend)
+        return skill.funcs(self, message)
+
+    def on_attack(self, timing):
+        return skill.skill_trigger(self, timing)
 
 def get_gs(group):
     group_name = str(group.id if group else 1)
