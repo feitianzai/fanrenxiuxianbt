@@ -17,7 +17,7 @@ def skill_tdts_func(u, skill_level, skill_conf):
 		'msg': None,
 	}
 	if info['trigger']:
-		info['msg'] = '【%s】感受到了生命威胁，发动了%s，造成了%d的伤害' % (u.nick_name, skill_conf['name'], damage)
+		info['msg'] = '【%s】感受到了生命威胁，发动%s造成%d的伤害' % (u.nick_name, skill_conf['name'], damage)
 		info['damage'] = damage
 	return info
 
