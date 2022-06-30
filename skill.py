@@ -102,6 +102,8 @@ def skill_trigger(u, timing):
 
 		return skill_conf['func'](u, skill_level, skill_conf)
 
+	return {'trigger': False}
+
 def funcs(u, message):
 	infos = message.strip().split(' ')
 	if len(infos) == 1:
