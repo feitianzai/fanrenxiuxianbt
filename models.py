@@ -9,6 +9,7 @@ import attribute
 import pk
 import battle
 import skill
+import realm
 
 db_name = "烦人修仙bt.db"
 db_conn = None
@@ -243,6 +244,10 @@ class user():
     def skill(self, friend, message):
         self.set_nick(friend)
         return skill.funcs(self, message)
+
+    def realm(self, friend, message):
+        self.set_nick(friend)
+        return realm.funcs(self, message)
 
     def on_attack(self, timing):
         return skill.skill_trigger(self, timing)
