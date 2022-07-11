@@ -3,7 +3,7 @@ from attribute import att_map
 
 def fight(me, other):
     msg = []
-    msg.append('【%s]与【%s】之间的战斗开始了' % (me.nick_name, other.nick_name))
+    msg.append('【%s】【%s]与【%s】【%s】之间的战斗开始了' % (me.realm_info['name'], me.nick_name, other.realm_info['name'], other.nick_name))
     me_info, other_info = {'name': me.nick_name, 'player': me}, {'name': other.nick_name, 'player': other}
     for k in att_map:
         me_info[k] = me.info.get(k, 0)

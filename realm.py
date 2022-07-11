@@ -15,7 +15,8 @@ realms = [
 def realm_desc(u):
 	msg = []
 	msg.append('【境界系统说明】')
-	msg.append('部分玩法需要境界要求')
+	msg.append('\t部分玩法有境界等级的需求')
+	msg.append('\t境界 破境，可以突破当前境界，破境有一定几率失败，失败会扣除部分功力。')
 	msg.append('【%s】当前境界为【%s】' % (u.nick_name, get_realm(u)['name']))
 	return '\n'.join(msg)
 

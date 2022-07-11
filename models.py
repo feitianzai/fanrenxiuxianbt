@@ -125,6 +125,7 @@ class user():
     name = ""
     nick_name = ""
     info = {}
+    realm_info = {'level': 0, 'name': ''}
 
     def __init__(self, db_row):
         self.id = db_row[0]
@@ -132,6 +133,7 @@ class user():
         self.name = db_row[2]
         self.nick_name = db_row[3]
         self.info = json.loads(db_row[4])
+        self.realm_info = realm.get_realm(self)
 
     def set_nick(self, friend):
         self.nick_name = friend.name if hasattr(friend, 'name') else friend.nickname
@@ -219,7 +221,7 @@ class user():
         msg = []
         msg.append('【%s】' % self.nick_name)
         msg.append('功力: %d' % (self.info.get('gongli', 0)))
-        msg.append('境界: 凡人')
+        msg.append('境界: %s' % (self.realm_info['name']))
         msg.append('精力: %d' % (self.info.get('jingli', 0)))
         msg.append('晨练进度: %d/%d' % (self.info.get('today_dazuo', 0), func_nums['dazuo_daymax']))
 
