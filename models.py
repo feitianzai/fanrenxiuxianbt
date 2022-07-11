@@ -142,6 +142,7 @@ class user():
         global db_conn, db_cursor
         db_cursor.execute("update user set nickname='%s', info='%s' where gs_id=%d and name='%s';" % (self.nick_name, json.dumps(self.info), self.gs_id, self.name))
         db_conn.commit()
+        self.realm_info = realm.get_realm(self)
 
     def get_gs(self):
         for gs in gs_list.values():
