@@ -18,8 +18,6 @@ async def friend_message_listener(app: Ariadne, friend: Friend, message: Message
 async def friend_message_listener(app: Ariadne, member: Member, group: Group, message: MessageChain):
     if group.id not in group_whitelist:
         return
-    # if member.id != master_id:
-    #     return
 
     msg = call_ctl(group, member, message)
     if msg:

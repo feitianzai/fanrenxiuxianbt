@@ -3,7 +3,7 @@ from config import master_id
 
 def gm_ctl(group, member, message):
     u = get_user(group, member)
-    if u.name != str(master_id):
+    if u.name not in master_id:
         return '还不是gm，建议py'
 
     ctls = message.split(' ')
@@ -15,4 +15,4 @@ def gm_ctl(group, member, message):
     	gs = get_gs(group)
     	gs.reset_all_attr()
     else:
-        return '这是什么？'
+        return ctls[1]
