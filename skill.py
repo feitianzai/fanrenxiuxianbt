@@ -53,16 +53,16 @@ def skill_desc():
 	return '\n'.join(msg)
 
 def skill_learn(u, infos):
-	skills = {}
-	total_skill_level = 0
+	skills = u.info.get('skill', {})
 	for item in infos[2:]:
 		tmp = item.split('=')
 		skill_name = tmp[0]
 		skill_level = int(tmp[1])
 		if skill_name not in skill_config or skill_level <= 0 or skill_level > len(skill_config[skill_name]['level_num']):
 			return '【%s】技能学习指令错误' % (u.nick_name)
-		total_skill_level += skill_level
 		skills[skill_name] = skill_level
+
+	total_skill_level = sum(skills.values())
 
 	gongli = u.info.get('gongli', 0)
 	u_skill_level = int(gongli / 100)
