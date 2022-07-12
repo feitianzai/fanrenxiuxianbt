@@ -15,4 +15,4 @@ def gm_ctl(group, member, message):
     	gs = get_gs(group)
     	gs.reset_all_attr()
     else:
-        return ctls[1]
+        return ' '.join(ctls[1:])
