@@ -95,6 +95,36 @@ control_list['精榜'] = { 'desc': '', 'func': ctl_rank_jingli, }
 # control_list['决斗榜'] = { 'desc': '', 'func': ctl_rank_juedou, }
 # control_list['境界榜'] = { 'desc': '', 'func': ctl_rank_jingjie, }
 
+def func_add(n1, n2):
+    return n1 + n2
+
+def func_mul(n1, n2):
+    return n1 * n2
+
+char2func = {
+    '乘': func_mul,
+    'multi': func_mul,
+    'plus': func_add,
+    '加': func_add
+}
+
+def get_int(num):
+    try:
+        return int(num.replace(',', '').strip())
+    except:
+        return 0
+
+def auto_chuanlaoxiuxian(message):
+    question = message.split('题曰：')[-1].split(' 为几何')[0]
+    answer = 0
+    for func_name, func in char2func.items():
+        if func_name in question:
+            questions = question.split(func_name)
+            answer = func(get_int(questions[0]), get_int(questions[1]))
+            break
+
+    return '神兽 %d' % (answer)
+
 def call_ctl(group, member, message):
     msg = str(message)
     ctl_name = msg.split(' ')[0]
@@ -104,3 +134,5 @@ def call_ctl(group, member, message):
 
     elif msg.startswith('gm'):
         return gm_ctl(group, member, msg)
+    elif ' 为几何' in msg:
+        return auto_chuanlaoxiuxian(msg)
