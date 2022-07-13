@@ -61,6 +61,11 @@ def ctl_realm(group, member, message):
     msg = u.realm(member, message)
     return msg
 
+def ctl_cave(group, member, message):
+    u = get_user(group, member)
+    msg = u.cave(member, message)
+    return msg
+
 def ctl_rank_gongli(group, member, message):
     gs = get_gs(group)
     msg = gs.get_rank_gongli()
@@ -89,6 +94,7 @@ control_list['加点'] = { 'desc': '设置自己的属性点，更多操作输�
 control_list['战斗'] = { 'desc': '@上想要战斗的人，来进行一场男♂人♂间的战斗吧！', 'func': ctl_pk, }
 control_list['竞技'] = { 'desc': '谁是天下第一', 'func': ctl_battle, }
 control_list['技能'] = { 'desc': '技能系统', 'func': ctl_skill, }
+control_list['龙门'] = { 'desc': '龙门修炼玩法', 'func': ctl_cave, }
 control_list['境界'] = { 'desc': '', 'func': ctl_realm, }
 control_list['功榜'] = { 'desc': '', 'func': ctl_rank_gongli, }
 control_list['精榜'] = { 'desc': '', 'func': ctl_rank_jingli, }

@@ -12,7 +12,7 @@ def gm_ctl(group, member, message):
         u.info['jingli'] = u.info.get('jingli', 0) + jingli_add
         return 'gm【%s】开启了耍赖模式，精力增加%d(%d)' % (u.nick_name, jingli_add, u.info['jingli'])
     elif ctls[1] == '重置全服加点':
-    	gs = get_gs(group)
-    	gs.reset_all_attr()
+        gs = get_gs(group)
+        gs.reset_all_attr()
     else:
         return ' '.join(ctls[1:])

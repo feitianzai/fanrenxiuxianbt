@@ -10,6 +10,7 @@ import pk
 import battle
 import skill
 import realm
+import cave
 
 db_name = "烦人修仙bt.db"
 db_conn = None
@@ -160,6 +161,7 @@ class user():
             num = func_nums['sign_jingli']
             self.info['jingli'] = self.info.get('jingli', 0) + num
             self.info['today_dazuo'] = 0
+            self.info['cave_create'] = 0
             self.save_db()
             msg = '【%s】求签成功，精力+%d(%d)' % (self.nick_name, num, self.info['jingli'])
         else:
@@ -224,6 +226,10 @@ class user():
         msg.append('功力: %d' % (self.info.get('gongli', 0)))
         msg.append('境界: %s' % (self.realm_info['name']))
         msg.append('精力: %d' % (self.info.get('jingli', 0)))
+        msg.append('灵气: %d' % (self.info.get('lingqi', 0)))
+        cave = self.info.get('cave')
+        if cave:
+            msg.append('龙门: 剩余灵气%d(%d)' % (cave.get('left'), cave.get('max')))
         msg.append('晨练进度: %d/%d' % (self.info.get('today_dazuo', 0), func_nums['dazuo_daymax']))
 
         return '\n'.join(msg)
@@ -251,6 +257,10 @@ class user():
     def realm(self, friend, message):
         self.set_nick(friend)
         return realm.funcs(self, message)
+
+    def cave(self, friend, message):
+        self.set_nick(friend)
+        return cave.funcs(self, message)
 
     def on_attack(self, timing):
         return skill.skill_trigger(self, timing)
