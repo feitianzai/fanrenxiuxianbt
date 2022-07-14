@@ -1,5 +1,5 @@
 import random
-from attribute import att_map
+from util import att_map
 
 def fight(me, other):
     msg = []

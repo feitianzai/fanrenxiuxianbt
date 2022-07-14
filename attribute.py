@@ -1,14 +1,4 @@
-att_trans = {
-    '生命': 'hp',
-    '攻击': 'attack',
-    '防御': 'defend',
-    '命中': 'hit',
-    '闪避': 'dodge',
-    '暴击': 'critical',
-    '韧性': 'tough',
-}
-
-att_map = {v: k for k, v in att_trans.items()}
+from util import att_trans, att_map
 
 def attr_desc():
     msg = []
@@ -48,14 +38,10 @@ def attr_add(u, sets):
 def attr_get(u):
     msg = []
     msg.append('【%s】当前加点属性' % (u.nick_name))
-    total = 0
     for k, v in att_trans.items():
-        one_val = u.info.get(v, 0)
-        total += one_val
-        msg.append('%s: %d' % (k, one_val))
-    msg.append('剩余加点: %d' % (u.info.get('gongli', 0) - u.info.get('used_gongli', 0)) )
-    # msg.append('全部加点: %d' % (total) )
-    # msg.append('当前功力: %d' % (u.info.get('gongli', 0)) )
+        msg.append('%s: %d' % (k, u.info.get(v, 0)))
+    if not u.info.get('job'):
+        msg.append('剩余加点: %d' % (u.info.get('gongli', 0) - u.info.get('used_gongli', 0)) )
 
     return '\n'.join(msg)
 
@@ -67,6 +53,8 @@ def attr_funcs(u, message, other):
     if attrs[1] == '查看':
         return attr_get(other or u)
     elif attrs[1] == '设置':
+        if u.info.get('job'):
+            return '【%s】当前已经转职，不再支持设置加点' % (u.nick_name)
         sets = {}
         add_val = 0
         for k in attrs[2:]:
@@ -89,6 +77,8 @@ def attr_funcs(u, message, other):
         else:
             return '【%s】加点设置成功' % (u.nick_name)
     elif attrs[1] == '增加':
+        if u.info.get('job'):
+            return '【%s】当前已经转职，不再支持设置加点' % (u.nick_name)
         sets = {}
         add_val = 0
         have_val = False
@@ -113,6 +103,8 @@ def attr_funcs(u, message, other):
         else:
             return '【%s】加点增加成功' % (u.nick_name)
     elif attrs[1] == '重置':
+        if u.info.get('job'):
+            return '【%s】当前已经转职，不再支持设置加点' % (u.nick_name)
         for k in att_map:
             u.info[k] = 0
         u.info['used_gongli'] = 0

@@ -11,6 +11,7 @@ import battle
 import skill
 import realm
 import cave
+import job
 
 db_name = "烦人修仙bt.db"
 db_conn = None
@@ -265,6 +266,10 @@ class user():
     def cave(self, friend, message):
         self.set_nick(friend)
         return cave.funcs(self, message)
+
+    def job(self, friend, message):
+        self.set_nick(friend)
+        return job.funcs(self, message)
 
     def on_attack(self, timing):
         return skill.skill_trigger(self, timing)
