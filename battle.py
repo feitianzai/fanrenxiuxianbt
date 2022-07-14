@@ -3,10 +3,10 @@ import pk
 def battle_desc():
     msg = []
     msg.append('【竞技场说明】')
-    msg.append('挑战命令： 竞技 挑战 名次')
+    msg.append('挑战命令:  竞技 挑战 名次')
     msg.append('如果当前没有名次, 则自动归位到最后一名')
     msg.append('如果当前挑战的名次高于自己, 则获胜后交换名次')
-    msg.append('查看命令： 竞技 查看')
+    msg.append('查看命令:  竞技 查看')
     msg.append('返回当前竞技场前十的道友')
     return '\n'.join(msg)
 

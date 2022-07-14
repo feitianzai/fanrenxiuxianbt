@@ -20,7 +20,7 @@ def cave_desc(u):
     msg.append('\t金丹以后可以开辟充满灵气的龙门, 消耗自身灵气吸收龙门中的灵气')
     msg.append('\t灵气在后期有额外用途, 且积攒到一定量的灵气可以自动转换为功力')
     msg.append('\t龙门内的灵气全部吸收后可提高渡劫成功率')
-    msg.append('\t可用命令： 龙门 新建, 龙门 修炼')
+    msg.append('\t可用命令:  龙门 新建, 龙门 修炼')
     cave = u.info.get('cave')
     if cave:
         msg.append('当前龙门: 剩余灵气%d(%d)' % (cave.get('left'), cave.get('max')))
