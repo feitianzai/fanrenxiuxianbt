@@ -1,4 +1,4 @@
-from models import get_gs, get_user
+from models import get_gs, get_user, world_frame
 from gm import gm_ctl
 from cl import cl_ctl
 
@@ -114,4 +114,7 @@ def call_ctl(group, member, message):
     else:
         answer = cl_ctl(group, member, msg)
         if answer:
-            return answer
+            return answer
+
+def frame_update():
+    world_frame()

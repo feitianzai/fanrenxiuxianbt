@@ -55,6 +55,10 @@ def get_other(gs_id, message):
     else:
         return None
 
+def world_frame():
+    # print('world_frame')
+    pass
+
 class game_server():
     id = 0
     name = ""
