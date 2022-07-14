@@ -6,7 +6,7 @@ def skill_ljyd_func(u, skill_level, skill_conf):
         'msg': None,
     }
     if info['trigger']:
-        info['msg'] = '【%s】发动了%s，提前发动了攻击' % (u.nick_name, skill_conf['name'])
+        info['msg'] = '【%s】发动了%s, 提前发动了攻击' % (u.nick_name, skill_conf['name'])
         info['pass_turn'] = True
     return info
 
@@ -17,26 +17,26 @@ def skill_tdts_func(u, skill_level, skill_conf):
         'msg': None,
     }
     if info['trigger']:
-        info['msg'] = '【%s】感受到了生命威胁，发动%s造成%d的伤害' % (u.nick_name, skill_conf['name'], damage)
+        info['msg'] = '【%s】感受到了生命威胁, 发动%s造成%d的伤害' % (u.nick_name, skill_conf['name'], damage)
         info['damage'] = damage
     return info
 
 skill_config = {
     '灵机一动': {
         'name': '灵机一动',
-        'desc': '其他人发起战斗时，有(10/20/30/40/50)%的几率先出手',
+        'desc': '其他人发起战斗时, 有(10/20/30/40/50)%的几率先出手',
         'timing': 'on_attack',
         'level_num': [0.1, 0.2, 0.3, 0.4, 0.5],
-        'view': '其他人发起战斗时，有%d%%的几率先出手',
+        'view': '其他人发起战斗时, 有%d%%的几率先出手',
         'priority': 100,
         'func': skill_ljyd_func,
     },
     '天地同寿': {
         'name': '天地同寿',
-        'desc': '受到致命攻击时，对对方造成自身(10/20/30)%生命最大值的直接伤害',
+        'desc': '受到致命攻击时, 对对方造成自身(10/20/30)%生命最大值的直接伤害',
         'timing': 'on_death',
         'level_num': [0.1, 0.2, 0.3],
-        'view': '受到致命攻击时，对对方造成自身%d%%生命最大值的直接伤害',
+        'view': '受到致命攻击时, 对对方造成自身%d%%生命最大值的直接伤害',
         'priority': 100,
         'func': skill_tdts_func,
     },
@@ -45,7 +45,7 @@ skill_config = {
 def skill_desc():
     msg = []
     msg.append('【技能系统说明】')
-    msg.append('通过消耗技能点学习技能，技能点为当前功力值除100后取整')
+    msg.append('通过消耗技能点学习技能, 技能点为当前功力值除100后取整')
     msg.append('可用操作 (技能 学习 技能名称=技能等级), (技能 查看)')
     msg.append('【可学习技能列表】')
     for skill_name, skill_info in skill_config.items():
@@ -67,7 +67,7 @@ def skill_learn(u, infos):
     gongli = u.info.get('gongli', 0)
     u_skill_level = int(gongli / 100)
     if total_skill_level > u_skill_level:
-        return '【%s】功力不足以学习全部技能，继续努力' % (u.nick_name)
+        return '【%s】功力不足以学习全部技能, 继续努力' % (u.nick_name)
 
     u.info['skill'] = skills
     u.save_db()

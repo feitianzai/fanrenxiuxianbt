@@ -16,7 +16,7 @@ def realm_desc(u):
     msg = []
     msg.append('【境界系统说明】')
     msg.append('\t部分玩法有境界等级的需求')
-    msg.append('\t境界 破境，可以突破当前境界，破境有一定几率失败，失败会扣除部分功力。')
+    msg.append('\t境界 破境, 可以突破当前境界, 破境有一定几率失败, 失败会扣除部分功力。')
     msg.append('【%s】当前境界为【%s】' % (u.nick_name, get_realm(u)['name']))
     return '\n'.join(msg)
 
@@ -30,7 +30,7 @@ def upgrade_realm(u):
     realm_info = realms[realm_level]
     gongli = u.info.get('gongli', 0)
     if gongli < realm_info['max']:
-        return '【%s】还未达到破境所需的功力，请继续修炼吧。' % (u.nick_name)
+        return '【%s】还未达到破境所需的功力, 请继续修炼吧。' % (u.nick_name)
     realm_addition_rate = u.info.get('realm_rate', 0)
     realm_rate = realm_info['rate'] + realm_addition_rate / 100
     if random.random() < realm_rate:
@@ -44,7 +44,7 @@ def upgrade_realm(u):
         gongli = max(gongli, 0)
         u.info['gongli'] = gongli
         u.save_db()
-        return '【%s】破境时遭遇心魔，破境失败，功力大减%d(%d)' % (u.nick_name, lost, gongli)
+        return '【%s】破境时遭遇心魔, 破境失败, 功力大减%d(%d)' % (u.nick_name, lost, gongli)
 
 def funcs(u, message):
     attrs = message.split(' ')

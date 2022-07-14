@@ -168,7 +168,7 @@ class user():
             self.info['today_dazuo'] = 0
             self.info['cave_create'] = 0
             self.save_db()
-            msg = '【%s】求签成功，精力+%d(%d)' % (self.nick_name, num, self.info['jingli'])
+            msg = '【%s】求签成功, 精力+%d(%d)' % (self.nick_name, num, self.info['jingli'])
         else:
             msg = '【%s】今天已经求签过了' % (self.nick_name)
         return msg
@@ -177,13 +177,13 @@ class user():
         self.set_nick(friend)
         today_dazuo = self.info.get('today_dazuo', 0)
         if today_dazuo and today_dazuo >= func_nums['dazuo_daymax']:
-            return '【%s】今天晨练次数已经很多了，修仙为逆天行事，不可操之过急，明日求签之后再继续吧' % (self.nick_name)
+            return '【%s】今天晨练次数已经很多了, 修仙为逆天行事, 不可操之过急, 明日求签之后再继续吧' % (self.nick_name)
 
         self.info['today_dazuo'] = self.info.get('today_dazuo', 0) + func_nums['dazuo_jingli']
         self.info['jingli'] = self.info.get('jingli', 0) + func_nums['dazuo_jingli']
         self.info['gongli'] = self.info.get('gongli', 0) + func_nums['dazuo_gongli']
         self.save_db()
-        msg = '【%s】晨练完成，精力+%d(%d)\n晨练后修行有感, 功力+%d(%d)' % (self.nick_name, func_nums['dazuo_jingli'], self.info['jingli'], func_nums['dazuo_gongli'], self.info['gongli'])
+        msg = '【%s】晨练完成, 精力+%d(%d)\n晨练后修行有感, 功力+%d(%d)' % (self.nick_name, func_nums['dazuo_jingli'], self.info['jingli'], func_nums['dazuo_gongli'], self.info['gongli'])
 
         return msg
 
@@ -191,7 +191,7 @@ class user():
         self.set_nick(friend)
         jingli = self.info.get('jingli', 0)
         if jingli == 0:
-            return '【%s】精力不足以进行奇遇事件，请求签或者晨练获得精力' % (self.nick_name)
+            return '【%s】精力不足以进行奇遇事件, 请求签或者晨练获得精力' % (self.nick_name)
 
         msg = []
         msg.append('【%s】开始了奇遇' % (self.nick_name))
@@ -201,23 +201,23 @@ class user():
             one_msg = self.xunbao_one()
             count += 1
             # msg.append(one_msg)
-            if one_msg == '精力不足了，停止奇遇':
+            if one_msg == '精力不足了, 停止奇遇':
                 self.save_db()
                 count -= 1
                 new_gongli = self.info.get('gongli', 0)
                 delta = new_gongli - old_gongli
-                msg.append('奇遇%d次，功力%s%d(%d)' % (count, '-' if delta < 0 else '+', delta, new_gongli))
+                msg.append('奇遇%d次, 功力%s%d(%d)' % (count, '-' if delta < 0 else '+', delta, new_gongli))
                 break
         return '\n'.join(msg)
 
     def xunbao_one(self):
         event = get_one_event()
         if self.info.get('gongli', 0) + event['gongli'] < 0:
-            return '奇遇事件导致重伤，回档了'
+            return '奇遇事件导致重伤, 回档了'
 
         jingli = self.info.get('jingli', 0) + event['jingli']
         if jingli < 0:
-            return '精力不足了，停止奇遇'
+            return '精力不足了, 停止奇遇'
         self.info['jingli'] = jingli
         self.info['gongli'] = self.info.get('gongli', 0) + event['gongli']
         # self.save_db()
@@ -247,7 +247,7 @@ class user():
         self.set_nick(friend)
         other = get_other(self.gs_id, message)
         if other is None:
-            return '战斗对象还未修仙，请不要欺凌弱小！'
+            return '战斗对象还未修仙, 请不要欺凌弱小！'
         msg, is_win = pk.fight(self, other)
         return msg
 

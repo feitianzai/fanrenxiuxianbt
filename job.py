@@ -4,7 +4,7 @@ from util import att_map
 jobs = {
     'pal': {
         'name': '体修',
-        'desc': '拥有超多的生命，均衡的攻防，一般的命中韧性，不善于闪避暴击',
+        'desc': '拥有超多的生命, 均衡的攻防, 一般的命中韧性, 不善于闪避暴击',
         'attr': {
             'hp': 6,
             'attack': 1.9,
@@ -18,7 +18,7 @@ jobs = {
     },
     'bar': {
         'name': '剑修',
-        'desc': '拥有一般的生命，超高的攻击暴击，一般的命中闪避，不善于防御和韧性',
+        'desc': '拥有一般的生命, 超高的攻击暴击, 一般的命中闪避, 不善于防御和韧性',
         'attr': {
             'hp': 5.9,
             'attack': 2.1,
@@ -32,7 +32,7 @@ jobs = {
     },
     'asn': {
         'name': '杀手',
-        'desc': '拥有一般的生命，超高的暴击闪避，一般的攻击命中，不善于防御和韧性',
+        'desc': '拥有一般的生命, 超高的暴击闪避, 一般的攻击命中, 不善于防御和韧性',
         'attr': {
             'hp': 5.8,
             'attack': 2.05,
@@ -66,14 +66,14 @@ def get_attrs(u, job):
 def job_desc(u):
     msg = []
     msg.append('【职业】系统介绍')
-    msg.append('拥有职业后，一点功力可以加点多个属性，且不同职业拥有不同侧重')
+    msg.append('拥有职业后, 一点功力可以加点多个属性, 且不同职业拥有不同侧重')
     msg.append('可发送 职业 转职 职业名称进行转职')
     for job_name, job_item in jobs.items():
         msg.append('%s: %s' % (job_item['name'], job_item['desc']))
     job = u.info.get('job')
     if job:
         attrs = get_attrs(u, job)
-        msg.append('【%s】当前职业【%s】，加点为' % (u.nick_name, jobs[job]['name']))
+        msg.append('【%s】当前职业【%s】, 加点为' % (u.nick_name, jobs[job]['name']))
         for attr_name, val in attrs.items():
             msg.append('%s: %d' % (att_map[attr_name], val))
 
@@ -84,7 +84,7 @@ def job_set(u, message):
     for job, job_item in jobs.items():
         if job_item['name'] == job_name:
             if u.info.get('realm', 0) < job_item['need_realm']:
-                return '【%s】当前境界不足，请努力修炼，早日转职' % (u.nick_name)
+                return '【%s】当前境界不足, 请努力修炼, 早日转职' % (u.nick_name)
             u.info['job'] = job
             attrs = get_attrs(u, job)
             for attr_name, val in attrs.items():
@@ -92,7 +92,7 @@ def job_set(u, message):
             u.save_db()
             return '【%s】成功转职为【%s】' % (u.nick_name, job_name)
 
-    return '【%s】想要转职为%s，但是仙界仍未开放该职业' % (u.nick_name, job_name)
+    return '【%s】想要转职为%s, 但是仙界仍未开放该职业' % (u.nick_name, job_name)
 
 def funcs(u, message):
     attrs = message.split(' ')
