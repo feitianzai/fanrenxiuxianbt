@@ -6,7 +6,7 @@ import pk
 
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Plain, At
-from graia.ariadne.model import Friend, Group
+from graia.ariadne.model import Friend, Group, MemberPerm
 
 need_realm = 3
 land_level = 15
@@ -96,10 +96,10 @@ async def fairyland_update(app, timestamp):
                 land['mon_hp'] = mon.info['hp']
                 land['mon_max_hp'] = mon.info['hp']
                 if is_win:
-                    msg = '【%s】经过奋战, 击败了【%s】, 获得了%d(%d)灵珠, 来到了%d层' % (user.nick_name, old_mon.nick_name, land_item, land['item_num'], land['now_level'])
+                    msg = '【%s】经过奋战, 击败了【%s】, 获得了%d(%d)灵珠, 来到了第%d层' % (user.nick_name, old_mon.nick_name, land_item, land['item_num'], land['now_level'])
                 else:
                     land['act_time'] += land_cooldown
-                    msg = '【%s】经过奋战, 击败了【%s】, 自身遭受重伤, 额外休息%d分钟, 获得了%d(%d)灵珠, 来到了%d层' % (user.nick_name, old_mon.nick_name, int(land_cooldown / 60), land_item, land['item_num'], land['now_level'])
+                    msg = '【%s】经过奋战, 击败了【%s】, 自身遭受重伤, 额外休息%d分钟, 获得了%d(%d)灵珠, 来到了第%d层' % (user.nick_name, old_mon.nick_name, int(land_cooldown / 60), land_item, land['item_num'], land['now_level'])
                 if user.info['lingqi'] < land_level_cost:
                     msg = msg + ', 由于灵气不足停止了探索'
         else:
@@ -116,7 +116,7 @@ async def fairyland_update(app, timestamp):
             friend = Friend(id=int(user.name), nickname=user.nick_name, remark='')
             await app.sendMessage(friend, MessageChain.create([Plain(msg)]))
         else:
-            group = Group(id=group_id, name='')
+            group = Group(id=group_id, name='', permission=MemberPerm.Member)
             await app.sendMessage(group, MessageChain.create([Plain(msg), At(int(user.name))]))
 
     for land_key in lands_to_delete:
@@ -192,7 +192,7 @@ def fairyland_exit(u):
     u.info['land'] = None
     u.info['land_item'] = u.info.get('land_item', 0) + land['item_num']
     u.save_db()
-    return '【%s】完成了探索, 到达了%d层, 获得了%d(%d)灵珠' % (u.nick_name, land['now_level'], land['item_num'], u.info['land_item'])
+    return '【%s】完成了探索, 到达了第%d层, 获得了%d(%d)灵珠' % (u.nick_name, land['now_level'], land['item_num'], u.info['land_item'])
 
 def funcs(u, message):
     attrs = message.split(' ')
