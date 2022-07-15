@@ -13,6 +13,7 @@ import realm
 import cave
 import job
 import fairyland
+import item
 
 db_name = "烦人修仙bt.db"
 db_conn = None
@@ -277,6 +278,10 @@ class user():
     def land(self, friend, message):
         self.set_nick(friend)
         return fairyland.funcs(self, message)
+
+    def item(self, friend, message):
+        self.set_nick(friend)
+        return item.funcs(self, message)
 
     def job(self, friend, message):
         self.set_nick(friend)
