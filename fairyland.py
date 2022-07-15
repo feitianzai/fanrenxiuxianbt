@@ -71,6 +71,7 @@ async def fairyland_update(app, timestamp):
 
         user = land_info['user']
         if user.info.get('lingqi', 0) < land_level_cost:
+            land['act_time'] += land_cooldown
             continue
 
         msg = ''
@@ -101,6 +102,7 @@ async def fairyland_update(app, timestamp):
                     land['act_time'] += land_cooldown
                     msg = '【%s】经过奋战, 击败了【%s】, 自身遭受重伤, 额外休息%d分钟, 获得了%d(%d)灵珠, 来到了第%d层' % (user.nick_name, old_mon.nick_name, int(land_cooldown / 60), land_item, land['item_num'], land['now_level'])
                 if user.info['lingqi'] < land_level_cost:
+                    land['act_time'] += land_cooldown
                     msg = msg + ', 由于灵气不足停止了探索'
         else:
             land['mon_hp'] = other_hp
@@ -109,7 +111,7 @@ async def fairyland_update(app, timestamp):
         user.info['land'] = land
         user.save_db()
 
-        print(int(user.name), user.nick_name, msg)
+        # print(int(user.name), user.nick_name, msg)
         #send message
         group_id = int(user.get_gs().name)
         if group_id == 1:
@@ -117,7 +119,7 @@ async def fairyland_update(app, timestamp):
             await app.sendMessage(friend, MessageChain.create([Plain(msg)]))
         else:
             group = Group(id=group_id, name='', permission=MemberPerm.Member)
-            await app.sendMessage(group, MessageChain.create([Plain(msg), At(int(user.name))]))
+            await app.sendMessage(group, MessageChain.create([Plain(msg)]))
 
     for land_key in lands_to_delete:
         del lands[land_key]
@@ -131,7 +133,9 @@ def fairyland_desc(u):
     msg.append('\t可用口令 秘境 探索, 秘境 状态, 秘境 收获')
     land = u.info.get('land')
     if land:
-        msg.append('秘境: 当前层数%d(%d), 守护兽血量%d(%d), 已累计灵珠%d' % (land['now_level'], land['max_level'], land['mon_hp'], land['mon_max_hp'], land['item_num']))
+        ts = int(datetime.datetime.now().timestamp())
+        next_cooldown = land['act_time'] + land_cooldown - ts
+        msg.append('【%s】当前秘境: 层数%d(%d), 守护兽血量%d(%d), 已累计灵珠%d, 下次将在%d分钟后挑战' % (u.nick_name, land['now_level'], land['max_level'], land['mon_hp'], land['mon_max_hp'], land['item_num'], int(next_cooldown / 60)))
     msg.append('灵珠数量: %d' % (u.info.get('land_item', 0)))
     return '\n'.join(msg)
 
