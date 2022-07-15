@@ -1,7 +1,7 @@
 from graia.ariadne.app import Ariadne
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Plain
-from graia.ariadne.model import Friend, Member, Group, MiraiSession
+from graia.ariadne.model import Friend, Member, Group, MiraiSession, AriadneStatus
 
 from graia.scheduler import GraiaScheduler
 from graia.scheduler.timers import crontabify
@@ -12,8 +12,10 @@ from controls import call_ctl, frame_update
 app = Ariadne(MiraiSession(host=mirai_info['host'], verify_key=mirai_info['verify_key'], account=mirai_info['account']))
 scheduler = app.create(GraiaScheduler)
 @scheduler.schedule(crontabify("* * * * * *"))
-def main_update():
-    frame_update()
+async def main_update():
+    if app.status != AriadneStatus.RUNNING:
+        return
+    await frame_update(app)
 
 @app.broadcast.receiver("FriendMessage")
 async def friend_message_listener(app: Ariadne, friend: Friend, message: MessageChain):

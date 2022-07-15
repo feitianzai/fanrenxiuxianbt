@@ -10,7 +10,7 @@ def fight(me, other):
         other_info[k] = other.info.get(k, 0)
 
     if me_info['hp'] <= 0 or other_info['hp'] <= 0:
-        return '未正确设置加点, 无法开始战斗', False
+        return '未正确设置加点, 无法开始战斗', False, other_info['hp']
 
     is_me_round = True
     is_on_attack = True
@@ -47,7 +47,7 @@ def fight(me, other):
         is_me_round = not is_me_round
         if len(msg) >= 1000:
             msg = msg[:9] + ['......', '双方打生打死, 不分胜负, 握手言和了']
-            return '\n'.join(msg), False
+            return '\n'.join(msg), False, other_info['hp']
 
     if len(msg) > 10:
         msg = msg[0:3] + ['战斗过程太长, 省略'] + msg[-4:]
@@ -58,4 +58,4 @@ def fight(me, other):
     else:
         is_win = me_info['hp'] > 0
         msg.append('【%s】获得了胜利！' % (me_info['name'] if is_win else other_info['name']))
-    return '\n'.join(msg), is_win
+    return '\n'.join(msg), is_win, other_info['hp']

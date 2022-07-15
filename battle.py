@@ -57,7 +57,7 @@ def battle_fight(u, rank):
     elif cur_rank == rank:
         return '【%s】挑战自己作甚？' % (u.nick_name)
 
-    _, is_win = pk.fight(u, other)
+    _, is_win, _ = pk.fight(u, other)
     if not is_win:
         return '【%s】挑战第%d名【%s】失败, 名次不变' % (u.nick_name, rank, other.nick_name)
 

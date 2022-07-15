@@ -12,6 +12,7 @@ import skill
 import realm
 import cave
 import job
+import fairyland
 
 db_name = "烦人修仙bt.db"
 db_conn = None
@@ -47,6 +48,7 @@ def init_db():
                 user_list[u.gs_id] = {}
             user_list[u.gs_id][u.name] = u
 
+        fairyland.fairyland_init(user_list)
         print("load db done")
 
 def get_other(gs_id, message):
@@ -56,9 +58,9 @@ def get_other(gs_id, message):
     else:
         return None
 
-def world_frame():
-    # print('world_frame')
-    pass
+async def world_frame(app):
+    ts = int(datetime.datetime.now().timestamp())
+    await fairyland.fairyland_update(app, ts)
 
 class game_server():
     id = 0
@@ -167,6 +169,7 @@ class user():
             self.info['jingli'] = self.info.get('jingli', 0) + num
             self.info['today_dazuo'] = 0
             self.info['cave_create'] = 0
+            self.info['land_create'] = 0
             self.save_db()
             msg = '【%s】求签成功, 精力+%d(%d)' % (self.nick_name, num, self.info['jingli'])
         else:
@@ -235,6 +238,10 @@ class user():
         cave = self.info.get('cave')
         if cave:
             msg.append('龙门: 剩余灵气%d(%d)' % (cave.get('left'), cave.get('max')))
+        land = self.info.get('land')
+        if land:
+            msg.append('秘境: 当前层数%d(%d), 守护兽血量%d(%d), 已累计灵珠%d' % (land['now_level'], land['max_level'], land['mon_hp'], land['mon_max_hp'], land['item_num']))
+        msg.append('灵珠数量: %d' % (self.info.get('land_item', 0)))
         msg.append('晨练进度: %d/%d' % (self.info.get('today_dazuo', 0), func_nums['dazuo_daymax']))
 
         return '\n'.join(msg)
@@ -248,7 +255,7 @@ class user():
         other = get_other(self.gs_id, message)
         if other is None:
             return '战斗对象还未修仙, 请不要欺凌弱小！'
-        msg, is_win = pk.fight(self, other)
+        msg, is_win, other_hp = pk.fight(self, other)
         return msg
 
     def battle(self, friend, message):
@@ -266,6 +273,10 @@ class user():
     def cave(self, friend, message):
         self.set_nick(friend)
         return cave.funcs(self, message)
+
+    def land(self, friend, message):
+        self.set_nick(friend)
+        return fairyland.funcs(self, message)
 
     def job(self, friend, message):
         self.set_nick(friend)
