@@ -148,6 +148,8 @@ class user():
         self.nick_name = friend.name if hasattr(friend, 'name') else friend.nickname
 
     def save_db(self):
+        job.update_attrs(self)
+
         global db_conn, db_cursor
         db_cursor.execute("update user set nickname='%s', info='%s' where gs_id=%d and name='%s';" % (self.nick_name, json.dumps(self.info), self.gs_id, self.name))
         db_conn.commit()

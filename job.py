@@ -63,6 +63,14 @@ def get_attrs(u, job):
         attrs[attr_name] = int(val * gongli)
     return attrs
 
+def update_attrs(u):
+    job = u.info.get('job')
+    if not job or job not in jobs:
+        return
+    attrs = get_attrs(u, job)
+    for attr_name, val in attrs.items():
+        u.info[attr_name] = val
+
 def job_desc(u):
     msg = []
     msg.append('【职业】系统介绍')
