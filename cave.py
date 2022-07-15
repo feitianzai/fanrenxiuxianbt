@@ -63,7 +63,7 @@ def cave_xiuxian(u):
     lingqi = u.info.get('lingqi', 0)
     use_lingqi = cave_info['use']
     if lingqi < use_lingqi:
-        return '【%s】灵气不足以在龙门中修炼'
+        return '【%s】灵气不足以在龙门中修炼' % (u.nick_name)
 
     now = int(datetime.datetime.now().timestamp())
     delta = cave['last'] + cooldown - now
