@@ -151,7 +151,7 @@ def fairyland_move(u):
             return '【%s】今天的秘境之旅已经完成' % (u.nick_name)
 
     if u.info.get('lingqi', 0) < land_level_cost:
-        return '【%s】灵气不足，无法开始秘境'
+        return '【%s】灵气不足，无法开始秘境' % (u.nick_name)
 
     global lands
     u.info['land_create'] = 1
