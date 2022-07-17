@@ -88,9 +88,9 @@ async def fairyland_update(app, timestamp):
             land['now_level'] += 1
             if land['now_level'] > land_level:
                 lands_to_delete.append(land_key)
-                land = None
                 user.info['land_item'] = user.info.get('land_item', 0) + land['item_num']
                 msg = '【%s】经过奋战, 击败了【%s】, 获得了%d(%d)灵珠, 完成了秘境的探索' % (user.nick_name, old_mon.nick_name, land_item, land['item_num'])
+                land = None
             else:
                 mon = Monster()
                 mon.create(land['realm_name'], land['now_level'], land['gongli'])
