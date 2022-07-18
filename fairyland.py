@@ -1,6 +1,7 @@
 #秘境
 import datetime
 import random
+import math
 from util import att_map
 import pk
 
@@ -8,14 +9,10 @@ from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Plain, At
 from graia.ariadne.model import Friend, Group, MemberPerm
 
-need_realm = 3
+need_realm = 2
 land_level = 15
-land_level_cost = 100
 land_mon_begin = 0.5
 land_mon_step = 0.1
-land_item = 1
-land_item_name = '灵珠'
-land_item_range = [1, 3]
 land_cooldown = 600
 
 lands = {}
@@ -61,6 +58,11 @@ def fairyland_init(user_list):
             if land:
                 lands[(user.get_gs().id, user.id)] = {'user': user, 'land': land}
 
+def __extra_item(level, realm_level):
+    if level < random.randint(0, 100):
+        return 0
+    return random.randint(1, realm_level)
+
 async def fairyland_update(app, timestamp):
     global lands
     lands_to_delete = []
@@ -70,6 +72,8 @@ async def fairyland_update(app, timestamp):
             continue
 
         user = land_info['user']
+        realm_level = user.realm_info['level']
+        land_level_cost = math.pow(10, max(realm_level - 1, 1))
         if user.info.get('lingqi', 0) < land_level_cost:
             land['act_time'] += land_cooldown
             continue
@@ -83,13 +87,20 @@ async def fairyland_update(app, timestamp):
 
         _, is_win, other_hp = pk.fight(user, old_mon)
         if is_win or other_hp <= 0:
-            land_item = land['now_level']
+            pass_str = '【%s】经过奋战, 击败了【%s】, ' % (user.nick_name, old_mon.nick_name)
+            extra_item = __extra_item(land['now_level'], realm_level)
+            land_item = land['now_level'] + extra_item
             land['item_num'] += land_item
+            if extra_item > 0:
+                item_str = '获得了%d+%d(%d)颗灵珠, ' % (land['now_level'], extra_item, land['item_num'])
+            else:
+                item_str = '获得了%d(%d)颗灵珠, ' % (land_item, land['item_num'])
+
             land['now_level'] += 1
             if land['now_level'] > land_level:
                 lands_to_delete.append(land_key)
                 user.info['land_item'] = user.info.get('land_item', 0) + land['item_num']
-                msg = '【%s】经过奋战, 击败了【%s】, 获得了%d(%d)灵珠, 完成了秘境的探索' % (user.nick_name, old_mon.nick_name, land_item, land['item_num'])
+                msg = '%s%s完成了秘境的探索' % (pass_str, item_str)
                 land = None
             else:
                 mon = Monster()
@@ -97,13 +108,15 @@ async def fairyland_update(app, timestamp):
                 land['mon_hp'] = mon.info['hp']
                 land['mon_max_hp'] = mon.info['hp']
                 if is_win:
-                    msg = '【%s】经过奋战, 击败了【%s】, 获得了%d(%d)灵珠, 来到了第%d层' % (user.nick_name, old_mon.nick_name, land_item, land['item_num'], land['now_level'])
+                    msg = '%s%s来到了第%d层' % (pass_str, item_str, land['now_level'])
                 else:
                     land['act_time'] += land_cooldown
-                    msg = '【%s】经过奋战, 击败了【%s】, 自身遭受重伤, 额外休息%d分钟, 获得了%d(%d)灵珠, 来到了第%d层' % (user.nick_name, old_mon.nick_name, int(land_cooldown / 60), land_item, land['item_num'], land['now_level'])
+                    msg = '%s自身遭受重伤, 额外休息%d分钟, %s来到了第%d层' % (pass_str, int(land_cooldown / 60), item_str, land['now_level'])
                 if user.info['lingqi'] < land_level_cost:
                     land['act_time'] += land_cooldown
                     msg = msg + ', 由于灵气不足停止了探索'
+        elif other_hp == land['mon_max_hp']:
+            msg = '【%s】经过奋战, 完败于【%s】, 刮痧!!' % (user.nick_name, old_mon.nick_name)
         else:
             land['mon_hp'] = other_hp
             msg = '【%s】经过奋战, 惜败于【%s】, 守护兽剩余血量%d(%d), 请继续努力' % (user.nick_name, old_mon.nick_name, land['mon_hp'], land['mon_max_hp'])
@@ -127,7 +140,7 @@ async def fairyland_update(app, timestamp):
 def fairyland_desc(u):
     msg = []
     msg.append('【秘境玩法说明】')
-    msg.append('\t玩家在元婴后可以探索15层秘境, 每层可获得与层数相同的灵珠, 每个灵珠可以提供1-3的功力')
+    msg.append('\t玩家在元婴后可以探索15层秘境, 每层可获得与层数相同的灵珠, 每个灵珠可以提供境界相关的随机功力')
     msg.append('\t秘境每天仅可探索一次, 需要打败每一层的守护兽方可获得灵珠, 也可以提前收获, 放弃后续的收益')
     msg.append('\t秘境为自动探索, 每一层的守护兽将逐渐增强')
     msg.append('\t可用口令 秘境 探索, 秘境 状态, 秘境 收获')
@@ -150,6 +163,7 @@ def fairyland_move(u):
         else:
             return '【%s】今天的秘境之旅已经完成' % (u.nick_name)
 
+    land_level_cost = math.pow(10, max(realm_level - 1, 1))
     if u.info.get('lingqi', 0) < land_level_cost:
         return '【%s】灵气不足，无法开始秘境' % (u.nick_name)
 
@@ -196,7 +210,7 @@ def fairyland_exit(u):
     u.info['land'] = None
     u.info['land_item'] = u.info.get('land_item', 0) + land['item_num']
     u.save_db()
-    return '【%s】完成了探索, 到达了第%d层, 获得了%d(%d)灵珠' % (u.nick_name, land['now_level'], land['item_num'], u.info['land_item'])
+    return '【%s】结束了秘境探索, 到达了第%d层, 获得了%d(%d)灵珠' % (u.nick_name, land['now_level'], land['item_num'], u.info['land_item'])
 
 def funcs(u, message):
     attrs = message.split(' ')

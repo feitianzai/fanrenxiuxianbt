@@ -3,7 +3,7 @@ import random
 
 def item_desc(u):
     msg = []
-    msg.append('使用灵珠可以获得1-3功力, 使用方法: 灵珠 x数量 或者 灵珠 数量. 带x是随机一次乘次数，不带是随机次数')
+    msg.append('使用灵珠可以获得境界相关的随机功力, 使用方法: 灵珠 x数量 或者 灵珠 数量. 带x是随机一次乘次数，不带是随机次数')
     msg.append('【%s】灵珠数量: %d' % (u.nick_name, u.info.get('land_item', 0)))
     return '\n'.join(msg)
 
@@ -25,15 +25,16 @@ def item_use(u, message):
         return '【%s】灵珠数量不足, 当前拥有%d' % (u.nick_name, have)
 
     u.info['land_item'] = have - use
+    realm_level = u.realm_info['level']
 
     total = 0
     if 'x' not in use_num:
         count = use
         while count > 0:
-            total += random.randint(1, 3)
+            total += random.randint(1, realm_level)
             count -= 1
     else:
-        total = random.randint(1, 3) * use
+        total = random.randint(1, realm_level) * use
 
     u.info['gongli'] = u.info.get('gongli', 0) + total
     u.save_db()

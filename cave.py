@@ -2,8 +2,8 @@
 import random
 import datetime
 
-need_realm = 2
-cooldown = 1800
+need_realm = 1
+cooldown = 600
 cave_config = {
     2: { 'create': 100, 'use': 5, 'gongli': 10 },
     3: { 'create': 1000, 'use': 50, 'gongli': 100 },
@@ -36,7 +36,7 @@ def cave_create(u):
 
     cave_info = cave_config[realm_level]
     lingqi = u.info.get('lingqi', 0) + cave_info['create']
-    ran_min = u.info.get('gongli', 0)
+    ran_min = u.info.get('gongli', 0) * 10
     ran_max = int(ran_min * 1.5)
     cave_max = random.randint(ran_min, ran_max)
     cave = {'max': cave_max, 'left': cave_max, 'last': 0}
@@ -71,8 +71,8 @@ def cave_xiuxian(u):
         return '【%s】还在平复之前修炼获得的灵气, 请在%d分钟后再次修炼' % (u.nick_name, int(delta / 60))
 
     gongli = u.info.get('gongli', 0)
-    ran_min = int(gongli * 0.3)
-    ran_max = int(gongli * 0.4)
+    ran_min = int(gongli * 3)
+    ran_max = int(gongli * 4)
     ran = random.randint(ran_min, ran_max)
     ran = min(ran, cave['left'])
 
