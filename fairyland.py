@@ -115,7 +115,7 @@ async def fairyland_update(app, timestamp):
                 if user.info['lingqi'] < land_level_cost:
                     land['act_time'] += land_cooldown
                     msg = msg + ', 由于灵气不足停止了探索'
-        elif other_hp == land['mon_max_hp']:
+        elif other_hp == land['mon_max_hp'] or other_hp == land['mon_hp']:
             msg = '【%s】经过奋战, 完败于【%s】, 刮痧!!' % (user.nick_name, old_mon.nick_name)
         else:
             land['mon_hp'] = other_hp
