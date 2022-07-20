@@ -15,7 +15,7 @@ import job
 import fairyland
 import item
 
-db_name = "烦人修仙bt.db"
+db_name = "game.db"
 db_conn = None
 db_cursor = None
 

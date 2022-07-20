@@ -29,11 +29,15 @@ def auto_chuanlaoxiuxian(message):
 
     return '神兽 %d' % (answer)
 
+__cl_group_id = 10010
 __cl_robot_id = 10010
 __cl_call_id = 10010
-ss_state, ss_number, ss_min, ss_max = False, 0, 0, 49
+ss_state, ss_number, ss_min, ss_max, ss_wrong = False, 0, 0, 49, []
 def guess_number(group, member, message):
-    global ss_state, ss_number, ss_min, ss_max
+    if group.id != __cl_group_id:
+        return
+
+    global ss_state, ss_number, ss_min, ss_max, ss_wrong
     if member.id == __cl_call_id and message == '驯服 1753363989' and not ss_state:
         ss_state = True
         return
@@ -49,27 +53,33 @@ def guess_number(group, member, message):
         return
 
     if message.startswith('紫微大帝猜中了神兽心中所想'):
-        print(ss_state, ss_number, ss_min, ss_max)
-        ss_state, ss_number, ss_min, ss_max = False, 0, 0, 49
+        print(ss_state, ss_number, ss_min, ss_max, ss_wrong)
+        ss_state, ss_number, ss_min, ss_max, ss_wrong = False, 0, 0, 49, []
         return
 
     if message.startswith('神兽口吐人言'):
         ss_number = 24
         return '神兽 %d' % (ss_number)
     elif message.startswith('吾心中之数') and '多之甚' in message:
+        ss_wrong.append(ss_number)
         ss_min = ss_number + 10
     elif message.startswith('吾心中之数') and '较大' in message:
+        ss_wrong.append(ss_number)
         ss_min = ss_number + 1
         ss_max = min(ss_max, ss_number + 10)
     elif message.startswith('吾心中之数') and '小之甚' in message:
+        ss_wrong.append(ss_number)
         ss_max = ss_number - 10
     elif message.startswith('吾心中之数') and '较小' in message:
+        ss_wrong.append(ss_number)
         ss_max = ss_number - 1
         ss_min = max(ss_min, ss_number -10)
     else:
         return
 
     ss_number = int((ss_min + ss_max) / 2)
+    if ss_number in ss_wrong:
+        ss_number, ss_min, ss_max, ss_wrong = 24, 0, 49, []
     return '神兽 %d' % (ss_number)
 
 def cl_ctl(group, member, message):

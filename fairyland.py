@@ -97,7 +97,8 @@ async def fairyland_update(app, timestamp):
                 item_str = '获得了%d(%d)颗灵珠, ' % (land_item, land['item_num'])
 
             land['now_level'] += 1
-            if land['now_level'] > land_level:
+            max_land_level = land_level * (realm_level - 1)
+            if land['now_level'] > max_land_level:
                 lands_to_delete.append(land_key)
                 user.info['land_item'] = user.info.get('land_item', 0) + land['item_num']
                 msg = '%s%s完成了秘境的探索' % (pass_str, item_str)
@@ -176,7 +177,7 @@ def fairyland_move(u):
         'realm_name': u.realm_info['name'],
         'gongli': u.info.get('gongli', 0),
         'now_level': now_level,
-        'max_level': land_level,
+        'max_level': land_level * (realm_level - 1),
         'mon_hp': mon.info['hp'],
         'mon_max_hp': mon.info['hp'],
         'item_num': 0,

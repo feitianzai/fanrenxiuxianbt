@@ -5,7 +5,7 @@ mirai_info = {
 }
 
 group_whitelist = [10010]
-master_id = 10010
+master_id = ['10010']
 
 func_nums = {
     'sign_jingli': 100,
