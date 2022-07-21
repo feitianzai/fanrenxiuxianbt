@@ -103,11 +103,11 @@ async def fairyland_update(app, timestamp):
 
         buff_str = ''
         buff_percent = random.randint(0, realm_level)
-        if land['level_trytimes'] > 0 and buff_percent > 0:
-            land['level_buff'] += buff_percent
+        if land.get('level_trytimes', 0) > 0 and buff_percent > 0:
+            land['level_buff'] = land.get('level_buff', 0) + buff_percent
             buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本层有效\n' % (buff_percent, land['level_buff'])
 
-        if land['level_buff'] > 0:
+        if land.get('level_buff', 0) > 0:
             buff_info = {'type': 'add_attr', 'value': {k: land['level_buff'] / 100 for k in att_map}}
             player.add_buff(buff_info)
 
@@ -146,10 +146,10 @@ async def fairyland_update(app, timestamp):
                     msg = msg + ', 由于灵气不足停止了探索'
         elif other_hp == land['mon_max_hp'] or other_hp == land['mon_hp']:
             msg = '【%s】经过奋战, 完败于【%s】, 刮痧!!' % (user.nick_name, old_mon.nick_name)
-            land['level_trytimes'] += 1
+            land['level_trytimes'] = land.get('level_trytimes', 0) + 1
         else:
             land['mon_hp'] = other_hp
-            land['level_trytimes'] += 1
+            land['level_trytimes'] = land.get('level_trytimes', 0) + 1
             msg = '【%s】经过奋战, 惜败于【%s】, 守护兽剩余血量%d(%d), 请继续努力' % (user.nick_name, old_mon.nick_name, land['mon_hp'], land['mon_max_hp'])
 
         user.info['land'] = land
