@@ -102,7 +102,7 @@ async def fairyland_update(app, timestamp):
         player = Mirror(user)
 
         buff_str = ''
-        buff_percent = random.randint(0, realm_level)
+        buff_percent = random.randint(1, realm_level + 1)
         if land.get('level_trytimes', 0) > 0 and buff_percent > 0:
             land['level_buff'] = land.get('level_buff', 0) + buff_percent
             buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本层有效\n' % (user.nick_name, buff_percent, land['level_buff'])
