@@ -20,6 +20,13 @@ def gm_ctl(group, member, message):
             user.info['land_item'] = user.info.get('land_item', 0) + num
             user.save_db()
         return 'gm【%s】为【%s】补发了%d颗灵珠' % (u.nick_name, user.nick_name, num)
+    elif ctls[1] == '重置秘境':
+        user_id = ctls[2].split('@')[-1]
+        user = gs.get_user(user_id)
+        if user:
+            user.info['land_create'] = 0
+            user.save_db()
+        return 'gm【%s】为【%s】重置了秘境' % (u.nick_name, user.nick_name)
     elif ctls[1] == '重置全服加点':
         gs = get_gs(group)
         gs.reset_all_attr()
