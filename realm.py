@@ -5,7 +5,7 @@ realms = [
     {'name': '先天', 'max': 100, 'rate': 0.85, 'max_rate': 1, 'fail_lose': 5},
     {'name': '金丹', 'max': 1000, 'rate': 0.75, 'max_rate': 0.8, 'fail_lose': 10},
     {'name': '元婴', 'max': 10000, 'rate': 0.65, 'max_rate': 0.8, 'fail_lose': 50},
-    {'name': '化身', 'max': 100000, 'rate': 0.55, 'max_rate': 0.6, 'fail_lose': 100},
+    {'name': '化神', 'max': 100000, 'rate': 0.55, 'max_rate': 0.6, 'fail_lose': 100},
     {'name': '返虚', 'max': 1000000, 'rate': 0.45, 'max_rate': 0.6, 'fail_lose': 500},
     {'name': '合道', 'max': 10000000, 'rate': 0.35, 'max_rate': 0.4, 'fail_lose': 1000},
     {'name': '渡劫', 'max': 100000000, 'rate': 0.25, 'max_rate': 0.4, 'fail_lose': 5000},
