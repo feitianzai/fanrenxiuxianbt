@@ -105,7 +105,7 @@ async def fairyland_update(app, timestamp):
         buff_percent = random.randint(0, realm_level)
         if land.get('level_trytimes', 0) > 0 and buff_percent > 0:
             land['level_buff'] = land.get('level_buff', 0) + buff_percent
-            buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本层有效\n' % (buff_percent, land['level_buff'])
+            buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本层有效\n' % (user.nick_name, buff_percent, land['level_buff'])
 
         if land.get('level_buff', 0) > 0:
             buff_info = {'type': 'add_attr', 'value': {k: land['level_buff'] / 100 for k in att_map}}
