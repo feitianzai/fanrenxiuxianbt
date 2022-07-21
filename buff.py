@@ -1,11 +1,11 @@
 #buff
 
 def buff_add_attr(u, attrs):
-    for k, v in attrs:
+    for k, v in attrs.items():
         u.info[k] = u.info.get(k, 0) + v
 
 def buff_add_attr_percent(u, attrs):
-    for k, v in attrs:
+    for k, v in attrs.items():
         u.info[k] = u.info.get(k, 0) * (1 + v)
 
 buff_config = {
