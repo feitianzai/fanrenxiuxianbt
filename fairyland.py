@@ -2,8 +2,12 @@
 import datetime
 import random
 import math
+import copy
 from util import att_map
+
 import pk
+import skill
+import buff
 
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Plain, At
@@ -31,7 +35,6 @@ class Monster():
             'critical': 0.05,
             'tough': 0.05,
         }
-        self.attr_desc = []
 
     def create(self, realm_name, level, player_gongli):
         self.realm_info['name'] = realm_name
@@ -42,13 +45,24 @@ class Monster():
         for attr_name, val in self.attr.items():
             attr_val = int(val * gongli)
             self.info[attr_name] = attr_val
-            self.attr_desc.append('%s: %d' % (att_map[attr_name], attr_val))
 
     def on_attack(self, timing):
         return {'trigger': False}
 
     def set_hp(self, hp):
         self.info['hp'] = hp
+
+class Mirror():
+    def __init__(self, user):
+        self.realm_info = copy.deepcopy(user.realm_info)
+        self.nick_name = user.nick_name
+        self.info = copy.deepcopy(user.info)
+
+    def on_attack(self, timing):
+        return skill.skill_trigger(self, timing)
+
+    def add_buff(self, buff_info):
+        buff.buff_trigger(self, buff_info)
 
 def fairyland_init(user_list):
     global lands
@@ -85,9 +99,23 @@ async def fairyland_update(app, timestamp):
         land['act_time'] = timestamp
         user.info['lingqi'] = user.info.get('lingqi', 0) - land_level_cost
 
-        _, is_win, other_hp = pk.fight(user, old_mon)
+        player = Mirror(user)
+
+        buff_str = ''
+        buff_percent = random.randint(0, realm_level)
+        if land['level_trytimes'] > 0 and buff_percent > 0:
+            land['level_buff'] += buff_percent
+            buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本层有效\n' % (buff_percent, land['level_buff'])
+
+        if land['level_buff'] > 0:
+            buff_info = {'type': 'add_attr', 'value': {k: land['level_buff'] / 100 for k in att_map}}
+            player.add_buff(buff_info)
+
+        _, is_win, other_hp = pk.fight(player, old_mon)
         if is_win or other_hp <= 0:
             pass_str = '【%s】经过奋战, 击败了【%s】, ' % (user.nick_name, old_mon.nick_name)
+            land['level_trytimes'] = 0
+            land['level_buff'] = 0
             extra_item = __extra_item(land['now_level'], realm_level)
             land_item = land['now_level'] + extra_item
             land['item_num'] += land_item
@@ -118,14 +146,16 @@ async def fairyland_update(app, timestamp):
                     msg = msg + ', 由于灵气不足停止了探索'
         elif other_hp == land['mon_max_hp'] or other_hp == land['mon_hp']:
             msg = '【%s】经过奋战, 完败于【%s】, 刮痧!!' % (user.nick_name, old_mon.nick_name)
+            land['level_trytimes'] += 1
         else:
             land['mon_hp'] = other_hp
+            land['level_trytimes'] += 1
             msg = '【%s】经过奋战, 惜败于【%s】, 守护兽剩余血量%d(%d), 请继续努力' % (user.nick_name, old_mon.nick_name, land['mon_hp'], land['mon_max_hp'])
 
         user.info['land'] = land
         user.save_db()
 
-        # print(int(user.name), user.nick_name, msg)
+        msg = buff_str + msg
         #send message
         group_id = int(user.get_gs().name)
         if group_id == 1:
@@ -168,6 +198,9 @@ def fairyland_move(u):
     if u.info.get('lingqi', 0) < land_level_cost:
         return '【%s】灵气不足，无法开始秘境' % (u.nick_name)
 
+    if u.info.get('land'):
+        return '【%s】有正在探索的秘境, 请收获' % (u.nick_name)
+
     global lands
     u.info['land_create'] = 1
     now_level = 1
@@ -182,6 +215,8 @@ def fairyland_move(u):
         'mon_max_hp': mon.info['hp'],
         'item_num': 0,
         'act_time': int(datetime.datetime.now().timestamp()) - land_cooldown + 1,
+        'level_trytimes': 0,
+        'level_buff': 0,
     }
     u.info['land'] = land
     u.save_db()
