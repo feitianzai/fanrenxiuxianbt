@@ -23,6 +23,7 @@ lands = {}
 
 class Monster():
     def __init__(self):
+        self.type = 'monster'
         self.realm_info = {}
         self.nick_name = ''
         self.info = {'gongli': 0}
@@ -54,9 +55,17 @@ class Monster():
 
 class Mirror():
     def __init__(self, user):
+        self.type = 'mirror'
         self.realm_info = copy.deepcopy(user.realm_info)
         self.nick_name = user.nick_name
         self.info = copy.deepcopy(user.info)
+        self.info['skill'] = {'天地同寿': 3}
+        if self.info.get('job'):
+            job = self.info['job']
+            if job == 'pal':
+                self.info['hp'] *= 1.2
+            elif job == 'bar':
+                self.info['attack'] *= 1.1
 
     def on_attack(self, timing):
         return skill.skill_trigger(self, timing)

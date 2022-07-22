@@ -129,6 +129,7 @@ class game_server():
         return user_list[self.id].get(name)
 
 class user():
+    type = 'user'
     id = 0
     gs_id = 0
     name = ""

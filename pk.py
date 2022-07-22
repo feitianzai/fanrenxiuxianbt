@@ -26,11 +26,19 @@ def fight(me, other):
                 is_me_round = not is_me_round
                 continue
 
-        is_hit = random.randint(0, 99) < (100 + fighter['hit'] - defender['dodge'])
+        hit_value = 100 + fighter['hit'] - defender['dodge']
+        if fighter['player'].type == 'mirror' and fighter['player'].info.get('job') in ['asn']:
+            hit_value = min(hit_value, 90)
+
+        is_hit = random.randint(0, 99) < hit_value
         if not is_hit:
             msg.append('【%s】发动了攻击, 却被【%s】闪避了' % (fighter['name'], defender['name']))
         else:
-            is_cri = random.randint(0, 99) < (fighter['critical'] - defender['tough'])
+            cri_value = fighter['critical'] - defender['tough']
+            if fighter['player'].type == 'mirror' and fighter['player'].info.get('job') in ['bar', 'asn']:
+                cri_value = max(10, cri_value)
+
+            is_cri = random.randint(0, 99) < cri_value
             blood = max(0, fighter['attack'] * (2 if is_cri else 1) - defender['defend'])
             if blood == 0:
                 msg.append('【%s】发动%s, 但是未能破防, 【%s】还剩%d的生命' % (fighter['name'], '致命一击' if is_cri else '攻击', defender['name'], defender['hp']))
