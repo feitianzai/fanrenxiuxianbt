@@ -59,7 +59,7 @@ class Mirror():
         self.realm_info = copy.deepcopy(user.realm_info)
         self.nick_name = user.nick_name
         self.info = copy.deepcopy(user.info)
-        self.info['skill'] = {'天地同寿': 3}
+        self.info['skill'] = {'天地同寿': max(self.realm_info['level'], 3)}
         if self.info.get('job'):
             job = self.info['job']
             if job == 'pal':
