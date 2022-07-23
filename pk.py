@@ -27,7 +27,7 @@ def fight(me, other):
                 continue
 
         hit_value = 100 + fighter['hit'] - defender['dodge']
-        if fighter['player'].type == 'mirror' and fighter['player'].info.get('job') in ['asn']:
+        if defender['player'].type == 'mirror' and defender['player'].info.get('job') in ['asn']:
             hit_value = min(hit_value, 90)
 
         is_hit = random.randint(0, 99) < hit_value
