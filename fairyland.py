@@ -111,10 +111,14 @@ async def fairyland_update(app, timestamp):
         player = Mirror(user)
 
         buff_str = ''
+        buff_keep = land.get('buff_keep', 0) == 1
         buff_percent = random.randint(1, realm_level + 1)
         if land.get('level_trytimes', 0) > 0 and buff_percent > 0:
             land['level_buff'] = land.get('level_buff', 0) + buff_percent
-            buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本层有效\n' % (user.nick_name, buff_percent, land['level_buff'])
+            if not buff_keep:
+                buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本层有效\n' % (user.nick_name, buff_percent, land['level_buff'])
+            else:
+                buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本次秘境有效\n' % (user.nick_name, buff_percent, land['level_buff'])
 
         if land.get('level_buff', 0) > 0:
             buff_info = {'type': 'add_attr', 'value': {k: land['level_buff'] / 100 for k in att_map}}
@@ -124,7 +128,8 @@ async def fairyland_update(app, timestamp):
         if is_win or other_hp <= 0:
             pass_str = '【%s】经过奋战, 击败了【%s】, ' % (user.nick_name, old_mon.nick_name)
             land['level_trytimes'] = 0
-            land['level_buff'] = 0
+            if not buff_keep:
+                land['level_buff'] = 0
             extra_item = __extra_item(land['now_level'], realm_level)
             land_item = land['now_level'] + extra_item
             land['item_num'] += land_item
@@ -226,6 +231,7 @@ def fairyland_move(u):
         'act_time': int(datetime.datetime.now().timestamp()) - land_cooldown + 1,
         'level_trytimes': 0,
         'level_buff': 0,
+        'buff_keep': 1,
     }
     u.info['land'] = land
     u.save_db()
