@@ -99,6 +99,7 @@ async def fairyland_update(app, timestamp):
         land_level_cost = math.pow(10, max(realm_level - 1, 1))
         if user.info.get('lingqi', 0) < land_level_cost:
             land['act_time'] += land_cooldown
+            user.save_db()
             continue
 
         msg = ''
