@@ -185,15 +185,13 @@ async def fairyland_update(app, timestamp):
 def fairyland_desc(u):
     msg = []
     msg.append('【秘境玩法说明】')
-    msg.append('\t玩家在元婴后可以探索15层秘境, 每层可获得与层数相同的灵珠, 每个灵珠可以提供境界相关的随机功力')
+    msg.append('\t玩家在金丹后可以探索秘境, 每层可获得与层数相同的灵珠, 每个灵珠可以提供境界相关的随机功力')
     msg.append('\t秘境每天仅可探索一次, 需要打败每一层的守护兽方可获得灵珠, 也可以提前收获, 放弃后续的收益')
     msg.append('\t秘境为自动探索, 每一层的守护兽将逐渐增强')
     msg.append('\t可用口令 秘境 探索, 秘境 状态, 秘境 收获')
     land = u.info.get('land')
     if land:
-        ts = int(datetime.datetime.now().timestamp())
-        next_cooldown = land['act_time'] + land_cooldown - ts
-        msg.append('【%s】当前秘境: 层数%d(%d), 守护兽血量%d(%d), 已累计灵珠%d, 下次将在%d分钟后挑战' % (u.nick_name, land['now_level'], land['max_level'], land['mon_hp'], land['mon_max_hp'], land['item_num'], int(next_cooldown / 60)))
+        msg.append(fairyland_info(u))
     msg.append('灵珠数量: %d' % (u.info.get('land_item', 0)))
     return '\n'.join(msg)
 
@@ -246,7 +244,7 @@ def fairyland_info(u):
     ts = int(datetime.datetime.now().timestamp())
     next_cooldown = land['act_time'] + land_cooldown - ts
 
-    return '【%s】当前秘境: 层数%d(%d), 守护兽血量%d(%d), 已累计灵珠%d, 下次将在%d分钟后挑战' % (u.nick_name, land['now_level'], land['max_level'], land['mon_hp'], land['mon_max_hp'], land['item_num'], int(next_cooldown / 60))
+    return '【%s】当前秘境: 层数%d(%d), 守护兽血量%d(%d), 当前加成%d%%, 已累计灵珠%d, 下次将在%d分钟后挑战' % (u.nick_name, land['now_level'], land['max_level'], land['mon_hp'], land['mon_max_hp'], land.get('level_buff', 0), land['item_num'], int(next_cooldown / 60))
 
 def fairyland_exit(u):
     land = u.info.get('land')
