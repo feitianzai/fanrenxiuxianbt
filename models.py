@@ -126,7 +126,10 @@ class game_server():
         msg = []
         msg.append('《烦人修仙bt服》秘境列表')
         for user_name, u in user_list.get(self.id, {}).items():
-            msg.append(fairyland.fairyland_info(u))
+            desc = fairyland.fairyland_info(u)
+            if '没有正在探索的秘境' in desc:
+                continue
+            msg.append(desc)
 
         return '\n'.join(msg)
 
