@@ -188,7 +188,7 @@ def fairyland_desc(u):
     msg.append('\t玩家在金丹后可以探索秘境, 每层可获得与层数相同的灵珠, 每个灵珠可以提供境界相关的随机功力')
     msg.append('\t秘境每天仅可探索一次, 需要打败每一层的守护兽方可获得灵珠, 也可以提前收获, 放弃后续的收益')
     msg.append('\t秘境为自动探索, 每一层的守护兽将逐渐增强')
-    msg.append('\t可用口令 秘境 探索, 秘境 状态, 秘境 收获')
+    msg.append('\t可用口令 秘境 探索, 秘境 状态, 秘境 收获, 秘境 列表')
     land = u.info.get('land')
     if land:
         msg.append(fairyland_info(u))
@@ -272,3 +272,5 @@ def funcs(u, message):
         return fairyland_info(u)
     elif attrs[1] == '收获':
         return fairyland_exit(u)
+    elif attrs[1] == '列表':
+        return u.get_gs().get_land_list()

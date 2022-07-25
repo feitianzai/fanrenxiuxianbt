@@ -122,6 +122,14 @@ class game_server():
 
         return '\n'.join(msg)
 
+    def get_land_list(self):
+        msg = []
+        msg.append('《烦人修仙bt服》秘境列表')
+        for user_name, u in user_list.get(self.id, {}).items():
+            msg.append(fairyland.fairyland_info(u))
+
+        return '\n'.join(msg)
+
     def reset_all_attr(self):
         pass
 
