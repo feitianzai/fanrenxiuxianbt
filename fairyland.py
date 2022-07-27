@@ -122,7 +122,7 @@ async def fairyland_update(app, timestamp):
                 buff_str = '【%s】整修期间, 痛定思痛, 实力增强了%d%%(%d%%), 仅在本次秘境有效\n' % (user.nick_name, buff_percent, land['level_buff'])
 
         if land.get('level_buff', 0) > 0:
-            buff_info = {'type': 'add_attr', 'value': {k: land['level_buff'] / 100 for k in att_map}}
+            buff_info = {'type': 'add_attr_percent', 'value': {k: land['level_buff'] / 100 for k in att_map}}
             player.add_buff(buff_info)
 
         _, is_win, other_hp = pk.fight(player, old_mon)
