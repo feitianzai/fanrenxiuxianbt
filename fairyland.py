@@ -113,7 +113,7 @@ async def fairyland_update(app, timestamp):
 
         buff_str = ''
         buff_keep = land.get('buff_keep', 0) == 1
-        buff_percent = math.pow(random.randint(1, realm_level + 1), max(realm_level - 1, 1))
+        buff_percent = random.randint(1, realm_level + 1)
         if land.get('level_trytimes', 0) > 0 and buff_percent > 0:
             land['level_buff'] = land.get('level_buff', 0) + buff_percent
             if not buff_keep:
