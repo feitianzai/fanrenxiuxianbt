@@ -126,6 +126,7 @@ async def fairyland_update(app, timestamp):
             player.add_buff(buff_info)
 
         _, is_win, other_hp = pk.fight(player, old_mon)
+        is_end = False
         if is_win or other_hp <= 0:
             pass_str = '【%s】经过奋战, 击败了【%s】, ' % (user.nick_name, old_mon.nick_name)
             land['level_trytimes'] = 0
@@ -146,6 +147,7 @@ async def fairyland_update(app, timestamp):
                 user.info['land_item'] = user.info.get('land_item', 0) + land['item_num']
                 msg = '%s%s完成了秘境的探索' % (pass_str, item_str)
                 land = None
+                is_end = True
             else:
                 mon = Monster()
                 mon.create(land['realm_name'], land['now_level'], land['gongli'])
@@ -178,7 +180,10 @@ async def fairyland_update(app, timestamp):
             await app.sendMessage(friend, MessageChain.create([Plain(msg)]))
         else:
             group = Group(id=group_id, name='', permission=MemberPerm.Member)
-            await app.sendMessage(group, MessageChain.create([Plain(msg)]))
+            if not is_end:
+                await app.sendMessage(group, MessageChain.create([Plain(msg)]))
+            else:
+                await app.sendMessage(group, MessageChain.create([Plain(msg), At(int(user.name))]))
 
     for land_key in lands_to_delete:
         del lands[land_key]
