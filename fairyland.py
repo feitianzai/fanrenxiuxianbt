@@ -142,6 +142,7 @@ async def fairyland_update(app, timestamp):
 
             land['now_level'] += 1
             max_land_level = land_level * (realm_level - 1)
+            land['max_level'] = max_land_level
             if land['now_level'] > max_land_level:
                 lands_to_delete.append(land_key)
                 user.info['land_item'] = user.info.get('land_item', 0) + land['item_num']
