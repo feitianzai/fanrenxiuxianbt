@@ -174,7 +174,7 @@ async def fairyland_update(app, timestamp):
         user.save_db()
 
         is_send = user.get_gs().info.get('秘境通知', True)
-        if not is_send:
+        if not is_send and not is_end:
             continue
 
         msg = buff_str + msg
