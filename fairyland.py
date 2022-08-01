@@ -173,6 +173,10 @@ async def fairyland_update(app, timestamp):
         user.info['land'] = land
         user.save_db()
 
+        is_send = user.get_gs().info.get('秘境通知', True)
+        if not is_send:
+            continue
+
         msg = buff_str + msg
         #send message
         group_id = int(user.get_gs().name)

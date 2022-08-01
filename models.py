@@ -139,6 +139,10 @@ class game_server():
     def get_user(self, name):
         return user_list[self.id].get(name)
 
+    def set_model_switch(self, model_name, off):
+        self.info[model_name] = off
+        self.save_db()
+
 class user():
     type = 'user'
     id = 0
