@@ -32,9 +32,9 @@ def gm_ctl(group, member, message):
         gs.reset_all_attr()
     elif ctls[1] == '功能关闭':
         gs = get_gs(group)
-        gs.set_model_switch(model_name = ctls[2], False)
+        gs.set_model_switch(ctls[2], False)
     elif ctls[1] == '功能打开':
         gs = get_gs(group)
-        gs.set_model_switch(model_name = ctls[2], True)
+        gs.set_model_switch(ctls[2], True)
     else:
         return ' '.join(ctls[1:])
