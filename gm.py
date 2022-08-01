@@ -33,8 +33,10 @@ def gm_ctl(group, member, message):
     elif ctls[1] == '功能关闭':
         gs = get_gs(group)
         gs.set_model_switch(ctls[2], False)
+        return 'gm【%s】已关闭【%s】功能' % (u.nick_name, ctls[2])
     elif ctls[1] == '功能打开':
         gs = get_gs(group)
         gs.set_model_switch(ctls[2], True)
+        return 'gm【%s】已打开【%s】功能' % (u.nick_name, ctls[2])
     else:
         return ' '.join(ctls[1:])
