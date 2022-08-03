@@ -95,6 +95,11 @@ async def fairyland_update(app, timestamp):
             continue
 
         user = land_info['user']
+
+        if not user.info.get('land'):
+            lands_to_delete.append(land_key)
+            continue
+
         realm_level = user.realm_info['level']
         land_level_cost = math.pow(10, max(realm_level - 1, 1))
         if user.info.get('lingqi', 0) < land_level_cost:
@@ -106,7 +111,7 @@ async def fairyland_update(app, timestamp):
         old_mon = Monster()
         old_mon.create(land['realm_name'], land['now_level'], land['gongli'])
         old_mon.set_hp(land['mon_hp'])
-        land['act_time'] = timestamp
+        land['act_time'] += land_cooldown
         user.info['lingqi'] = user.info.get('lingqi', 0) - land_level_cost
 
         player = Mirror(user)
@@ -177,18 +182,21 @@ async def fairyland_update(app, timestamp):
         if not is_send and not is_end:
             continue
 
-        msg = buff_str + msg
-        #send message
-        group_id = int(user.get_gs().name)
-        if group_id == 1:
-            friend = Friend(id=int(user.name), nickname=user.nick_name, remark='')
-            await app.sendMessage(friend, MessageChain.create([Plain(msg)]))
-        else:
-            group = Group(id=group_id, name='', permission=MemberPerm.Member)
-            if not is_end:
-                await app.sendMessage(group, MessageChain.create([Plain(msg)]))
+        try:
+            msg = buff_str + msg
+            #send message
+            group_id = int(user.get_gs().name)
+            if group_id == 1:
+                friend = Friend(id=int(user.name), nickname=user.nick_name, remark='')
+                await app.sendMessage(friend, MessageChain.create([Plain(msg)]))
             else:
-                await app.sendMessage(group, MessageChain.create([Plain(msg), At(int(user.name))]))
+                group = Group(id=group_id, name='', permission=MemberPerm.Member)
+                if not is_end:
+                    await app.sendMessage(group, MessageChain.create([Plain(msg)]))
+                else:
+                    await app.sendMessage(group, MessageChain.create([Plain(msg), At(int(user.name))]))
+        except Exception as e:
+            print('sendMessage error', e, msg)
 
     for land_key in lands_to_delete:
         del lands[land_key]
